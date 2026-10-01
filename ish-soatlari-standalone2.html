@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ish soatlari hisobi</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+:root{--bg:#EDF0F6;--card:#FFFFFF;--ink:#141A26;--mute:#5B6478;--line:#DCE1EC;--day:#D98A14;--day-soft:#FBF0DD;--night:#4147A3;--night-soft:#E7E8F7;--pri:#0E7D68;--pri-soft:#DDF0EA;--onpri:#F3FFFB;--danger:#C23B32;--danger-soft:#FAE4E1;--shadow:0 1px 2px rgba(20,26,38,.04),0 6px 16px -8px rgba(20,26,38,.12)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0C0F15;--card:#151A24;--ink:#EAEDF5;--mute:#8D96AC;--line:#262E3D;--day:#F0AA42;--day-soft:#2E2412;--night:#8E97EE;--night-soft:#20233D;--pri:#2BBC9E;--pri-soft:#102824;--onpri:#06221B;--danger:#FF8577;--danger-soft:#2E1715;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 24px -10px rgba(0,0,0,.55)}}
+:root[data-theme="dark"]{--bg:#0C0F15;--card:#151A24;--ink:#EAEDF5;--mute:#8D96AC;--line:#262E3D;--day:#F0AA42;--day-soft:#2E2412;--night:#8E97EE;--night-soft:#20233D;--pri:#2BBC9E;--pri-soft:#102824;--onpri:#06221B;--danger:#FF8577;--danger-soft:#2E1715;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 24px -10px rgba(0,0,0,.55)}
+*{box-sizing:border-box}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 'Inter',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+main{max-width:560px;margin:0 auto;padding:18px 16px 40px}
+h1{font-size:21px;font-weight:800;letter-spacing:-.01em;margin:6px 0 2px}
+h1 .sub{display:block;font-size:13px;font-weight:500;color:var(--mute);margin-top:3px}
+h1::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:9px;background:linear-gradient(135deg,var(--day),var(--night))}
+h2{font-size:15px;font-weight:700;letter-spacing:-.005em;margin:0 0 10px}
+.card{background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:18px;padding:16px;margin-bottom:12px}
+label{display:block;font-size:12.5px;font-weight:500;color:var(--mute);margin-bottom:5px}
+input,select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:10px 11px;min-height:44px;transition:border-color .15s}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none;border-color:var(--pri);box-shadow:0 0 0 3px var(--pri-soft)}
+button:focus-visible{outline:2px solid var(--pri);outline-offset:2px}
+.row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+button{font:inherit;min-height:44px;border-radius:11px;border:0;cursor:pointer;transition:transform .08s,opacity .15s}
+button:active{transform:scale(.97)}
+.add{width:100%;margin-top:12px;background:var(--pri);color:var(--onpri);font-weight:700;box-shadow:0 4px 14px -4px rgba(14,125,104,.45)}
+.total{font-size:36px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.total small{font-size:15px;font-weight:600;color:var(--mute)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.stat{background:var(--bg);border-radius:12px;padding:9px 10px}
+.stat b{display:block;font-size:16px;font-weight:700}.stat span{font-size:11.5px;color:var(--mute)}
+.stat.d{background:var(--day-soft)}.stat.n{background:var(--night-soft)}
+.shift{padding:12px 0;border-top:1px solid var(--line)}
+.shift:first-of-type{border-top:0}
+.top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.meta{font-size:12.5px;color:var(--mute);margin-top:3px;line-height:1.5}
+.bar{display:flex;height:7px;border-radius:4px;overflow:hidden;background:var(--line);margin:8px 0 5px}
+.bar i{display:block;height:100%}
+.del{background:none;color:var(--danger);min-height:32px;padding:0 8px;font-size:13px;font-weight:500}
+.empty{color:var(--mute);margin:0;font-size:14px}
+.err{color:var(--danger);font-size:13.5px;margin:8px 0 0;min-height:1em;font-weight:500}
+.note{font-size:12px;color:var(--mute);margin:8px 0 0;line-height:1.5}
+textarea{resize:vertical;font-family:inherit}
+.sec{background:var(--bg);color:var(--ink);border:1px solid var(--line);font-weight:600;width:100%}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.found{border-top:1px solid var(--line);padding:9px 0;display:flex;justify-content:space-between;gap:8px;font-size:14px}
+.stat-line{font-size:13.5px;margin:10px 0 0;color:var(--mute)}
+.chk{display:flex;align-items:center;gap:9px;color:var(--ink);font-size:14.5px;margin:12px 0 0}
+.chk input{width:20px;height:20px;min-height:20px;padding:0;accent-color:var(--pri)}
+.tag{color:var(--day);font-weight:700;background:var(--day-soft);padding:1px 7px;border-radius:6px}
+.tg{background:none;color:var(--pri);min-height:32px;padding:0 8px;font-size:12.5px;font-weight:600}
+.pay{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:11px 12px;margin-top:8px;border-top:0;background:var(--bg);border-radius:12px}
+.pay+.pay{margin-top:8px}
+.pay>b{white-space:nowrap;font-weight:700}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+<h1>Ish soatlari hisobi<span class="sub">Smenalar, oylik hisob va to'lov sanalari</span></h1>
+
+<section class="card">
+  <label for="month">Oy</label>
+  <input type="month" id="month">
+  <div style="margin-top:12px" class="total"><span id="pay">0</span> <small>so'm</small></div>
+  <div class="stats">
+    <div class="stat"><b id="paidH">0</b><span>Hisoblangan soat</span></div>
+    <div class="stat d"><b id="dayH">0</b><span>Kunduzgi</span></div>
+    <div class="stat n"><b id="nightH">0</b><span>Tungi (1.5x)</span></div>
+  </div>
+  <div id="pays" style="margin-top:12px"></div>
+  <p class="note" id="cnt"></p>
+</section>
+
+<section class="card" id="photoCard">
+  <h2>Matndan qo'shish</h2>
+  <label for="txt">Smenalarni matn qilib joylang (har qatorda bittadan)</label>
+  <textarea id="txt" rows="3" placeholder="03.09 06:00-15:00&#10;04.09 22:00-06:00 bayram"></textarea>
+  <button class="sec" id="txtBtn" type="button" style="margin-top:10px">Matndan o'qish</button>
+  <div class="stat-line" id="photoStat" role="status"></div>
+  <div id="found"></div>
+  <div class="btns" id="foundBtns" hidden>
+    <button class="sec" id="cancelFound" type="button">Bekor qilish</button>
+    <button class="add" id="addFound" type="button" style="margin-top:0">Hammasini qo'shish</button>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Smenani qo'shish</h2>
+  <div class="row">
+    <div><label for="date">Sana</label><input type="date" id="date"></div>
+    <div><label for="st">Boshlandi</label><input type="time" id="st" value="06:00"></div>
+    <div><label for="en">Tugadi</label><input type="time" id="en" value="15:00"></div>
+  </div>
+  <p class="note" id="rinfo">Aniq kelgan va ketgan vaqtni kiriting, dastur 17.08.2026 dan keyingi smenalarni 10 daqiqaga yaxlitlaydi.</p>
+  <label class="chk"><input type="checkbox" id="hol"> Bayram kuni (ish haqi ko'paytiriladi)</label>
+  <div class="err" id="err" role="alert"></div>
+  <button class="add" id="addBtn" type="button">Smenani saqlash</button>
+</section>
+
+<section class="card">
+  <h2>Smenalar</h2>
+  <div id="list"></div>
+</section>
+
+<section class="card">
+  <h2>Sozlamalar</h2>
+  <div class="row2">
+    <div><label for="rate">Soatlik haq (so'm)</label><input type="number" id="rate" inputmode="numeric" min="0"></div>
+    <div><label for="mult">Tungi koeffitsient</label><input type="number" id="mult" inputmode="decimal" step="0.1" min="1"></div>
+  </div>
+  <div class="row2">
+    <div><label for="holx">Bayram koeffitsienti</label><input type="number" id="holx" inputmode="decimal" step="0.1" min="1"></div>
+    <div><label for="holmode">Bayramda tungi soat</label><select id="holmode"><option value="replace">Ham 2x (almashadi)</option><option value="stack">2x va 1.5x ko'payadi</option></select></div>
+  </div>
+  <label class="chk" style="margin:0 0 12px"><input type="checkbox" id="rnd"> Vaqtni 10 daqiqaga yaxlitlash (SKUD, 17.08.2026 dan)</label>
+  <label for="ded">Abed vaqti qaysi soatdan ayriladi</label>
+  <select id="ded"><option value="day">Kunduzgi soatdan</option><option value="night">Tungi soatdan</option></select>
+  <p class="note">Kunduz 06:00–22:00, tun 22:00–06:00. Smena 9 soat yoki undan uzun bo'lsa 1 soat, qisqa bo'lsa 30 daqiqa abedga ayriladi. Bayram kuni belgilangan smenada butun soat bayram koeffitsienti bilan hisoblanadi. Ma'lumotlar shu qurilma brauzerida saqlanadi.</p>
+</section>
+</main>
+<script>
+(function(){
+var KEY="ish-soatlari-v1";
+var S={rate:22700,mult:1.5,ded:"day",hol:2,holMode:"replace",round:true,shifts:[]};
+try{var raw=localStorage.getItem(KEY);if(raw){var p=JSON.parse(raw);if(p&&typeof p==="object"){S.rate=+p.rate||22700;S.mult=+p.mult||1.5;S.ded=p.ded==="night"?"night":"day";S.hol=+p.hol||2;S.holMode=p.holMode==="stack"?"stack":"replace";S.round=p.round!==false;S.shifts=Array.isArray(p.shifts)?p.shifts:[];}}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+var $=function(id){return document.getElementById(id)};
+function tm(t){var a=t.split(":");return +a[0]*60+ +a[1];}
+function hm(m){var h=Math.floor(m/60),n=m%60;return n?h+" s "+n+" daq":h+" s";}
+function money(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g," ");}
+function calc(sh){
+  var s=tm(sh.start),e=tm(sh.end);if(e<=s)e+=1440;
+  var total=e-s,night=0,zones=[[0,360],[1320,1800],[2760,3240]];
+  zones.forEach(function(z){night+=Math.max(0,Math.min(e,z[1])-Math.max(s,z[0]));});
+  var day=total-night,ded=total>=540?60:30,t;
+  var dr=S.rate,nr=S.rate*S.mult;
+  if(sh.hol){dr=S.rate*S.hol;nr=S.holMode==="stack"?S.rate*S.hol*S.mult:S.rate*S.hol;}
+  if(S.ded==="day"){t=Math.min(day,ded);day-=t;night-=Math.min(night,ded-t);}
+  else{t=Math.min(night,ded);night-=t;day-=Math.min(day,ded-t);}
+  return{total:total,day:day,night:night,paid:day+night,ded:ded,pay:day/60*dr+night/60*nr};
+}
+function today(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function fmtDate(s){var p=s.split("-"),d=new Date(+p[0],+p[1]-1,+p[2]);var w=["yak","du","se","chor","pay","ju","sha"][d.getDay()];return p[2]+"."+p[1]+"."+p[0]+" ("+w+")";}
+var HOLS=["01-01","03-08","03-21","05-09","09-01","10-01","12-08"];
+function two(n){return String(n).padStart(2,"0");}
+var ROUND_FROM="2026-08-17";
+function roundT(t){var m=tm(t),r=Math.round(m/10)*10;r=r%1440;return two(Math.floor(r/60))+":"+two(r%60);}
+function rd(d,t){return S.round&&d>=ROUND_FROM?roundT(t):t;}
+function isOff(d){var w=d.getDay(),k=two(d.getMonth()+1)+"-"+two(d.getDate());return w===0||w===6||HOLS.indexOf(k)>=0;}
+function payDate(y,mo,day){var d=new Date(y,mo,day),moved=false;while(isOff(d)){d.setDate(d.getDate()-1);moved=true;}return{d:d,moved:moved};}
+function fmtD(d){var w=["yak","du","se","chor","pay","ju","sha"][d.getDay()];return two(d.getDate())+"."+two(d.getMonth()+1)+"."+d.getFullYear()+" ("+w+")";}
+function payRow(name,range,n,sum,pd){
+  return '<div class="pay"><div><b>'+name+'</b><div class="meta">'+range+" smenalari \u00b7 "+n+' ta</div><div class="meta">To\'lov: '+fmtD(pd.d)+(pd.moved?" \u00b7 dam olish/bayram sababli erta to'lanadi":"")+'</div></div><b>'+money(sum)+" so'm</b></div>";
+}
+function render(){
+  var m=$("month").value,list=S.shifts.filter(function(x){return x.date.slice(0,7)===m;}).sort(function(a,b){return a.date<b.date?1:a.date>b.date?-1:0;});
+  var tp=0,td=0,tn=0,tpay=0,h="",s1=0,s2=0,n1=0,n2=0;
+  list.forEach(function(sh){
+    var c=calc(sh);tp+=c.paid;td+=c.day;tn+=c.night;tpay+=c.pay;if(+sh.date.slice(8,10)<=15){s1+=c.pay;n1++;}else{s2+=c.pay;n2++;}
+    var dp=c.paid?c.day/c.paid*100:0;
+    h+='<div class="shift"><div class="top"><b>'+fmtDate(sh.date)+'</b><b>'+money(c.pay)+" so'm</b></div>"+
+    '<div class="bar" title="Kunduzgi / tungi"><i style="width:'+dp+'%;background:var(--day)"></i><i style="width:'+(100-dp)+'%;background:var(--night)"></i></div>'+
+    '<div class="top"><span class="meta">'+sh.start+"\u2013"+sh.end+" \u00b7 ishladi "+hm(c.total)+" \u00b7 abed \u2212"+c.ded+" daq \u00b7 hisoblandi "+hm(c.paid)+(sh.hol?' \u00b7 <span class="tag">bayram '+S.hol+"x</span>":"")+'</span><span style="white-space:nowrap"><button class="tg" type="button" data-hol="'+sh.id+'">'+(sh.hol?"Bayramni olib tashlash":"Bayram")+'</button><button class="del" type="button" data-id="'+sh.id+'">O\'chirish</button></span></div></div>';
+  });
+  $("list").innerHTML=h||'<p class="empty">Bu oyda smena yo\'q. Yuqoridan birinchi smenani qo\'shing.</p>';
+  if(/^\d{4}-\d{2}$/.test(m)){var yy=+m.slice(0,4),mm=+m.slice(5,7)-1;
+    $("pays").innerHTML=payRow("Avans","1\u201315-sana",n1,s1,payDate(yy,mm,20))+payRow("Hisob-kitob","16-sanadan oxirigacha",n2,s2,payDate(yy,mm+1,5))+'<p class="note">Smena boshlangan sanaga qarab hisoblanadi. To\'lov sanasi dam olish yoki bayramga to\'g\'ri kelsa, oldingi ish kuniga suriladi (hayit kunlari hisobga olinmagan).</p>';
+  }else{$("pays").innerHTML="";}
+  $("pay").textContent=money(tpay);$("paidH").textContent=hm(tp);$("dayH").textContent=hm(td);$("nightH").textContent=hm(tn);
+  $("cnt").textContent=list.length+" ta smena";
+}
+$("month").value=today().slice(0,7);$("date").value=today();
+$("rate").value=S.rate;$("mult").value=S.mult;$("ded").value=S.ded;$("holx").value=S.hol;$("holmode").value=S.holMode;$("rnd").checked=S.round;
+$("month").addEventListener("change",render);
+$("addBtn").addEventListener("click",function(){
+  var d=$("date").value,a=$("st").value,b=$("en").value,er=$("err");
+  if(!d||!a||!b){er.textContent="Sana, boshlanish va tugash vaqtini kiriting.";return;}
+  if(a===b){er.textContent="Boshlanish va tugash vaqti bir xil bo'lmasligi kerak.";return;}
+  er.textContent="";var info="";
+  if(S.round&&d>=ROUND_FROM){var ra=roundT(a),rb=roundT(b);if(ra!==a||rb!==b)info="Yaxlitlandi: "+a+"\u2013"+b+" \u2192 "+ra+"\u2013"+rb;a=ra;b=rb;if(a===b){er.textContent="Yaxlitlangandan keyin boshlanish va tugash vaqti bir xil bo'lib qoldi.";return;}}
+  $("rinfo").textContent=info||"Aniq kelgan va ketgan vaqtni kiriting, dastur 17.08.2026 dan keyingi smenalarni 10 daqiqaga yaxlitlaydi.";
+  S.shifts=S.shifts.concat([{id:Date.now()+""+Math.floor(Math.random()*1000),date:d,start:a,end:b,hol:$("hol").checked}]);$("hol").checked=false;
+  save();$("month").value=d.slice(0,7);render();
+});
+$("list").addEventListener("click",function(ev){
+  var hid=ev.target&&ev.target.getAttribute("data-hol");
+  if(hid){S.shifts=S.shifts.map(function(x){return x.id===hid?{id:x.id,date:x.date,start:x.start,end:x.end,hol:!x.hol}:x;});save();render();return;}
+  var id=ev.target&&ev.target.getAttribute("data-id");if(!id)return;
+  S.shifts=S.shifts.filter(function(x){return x.id!==id;});save();render();
+});
+$("rnd").addEventListener("change",function(){S.round=$("rnd").checked;save();});
+["rate","mult","ded","holx","holmode"].forEach(function(id){
+  $(id).addEventListener("change",function(){
+    S.rate=+$("rate").value||0;S.mult=+$("mult").value||1;S.ded=$("ded").value;S.hol=+$("holx").value||2;S.holMode=$("holmode").value==="stack"?"stack":"replace";save();render();
+  });
+});
+render();
+
+var pending=[];
+function normTime(t){var m=/^(\d{1,2})[:.](\d{2})/.exec(String(t||"").trim());if(!m)return null;var h=+m[1],n=+m[2];if(h>23||n>59)return null;return String(h).padStart(2,"0")+":"+String(n).padStart(2,"0");}
+function showFound(){
+  var h="";pending.forEach(function(x){var c=calc(x);h+='<div class="found"><span>'+fmtDate(x.date)+" \u00b7 "+x.start+"\u2013"+x.end+(x.hol?" \u00b7 bayram":"")+"</span><b>"+money(c.pay)+" so'm</b></div>";});
+  $("found").innerHTML=h;$("foundBtns").hidden=!pending.length;
+}
+function parseText(txt){
+  var out=[],yr=+($("month").value||today()).slice(0,4);
+  txt.split(/\n/).forEach(function(line){
+    var iso=/(\d{4})-(\d{2})-(\d{2})/.exec(line),date=null;
+    if(iso)date=iso[0];
+    else{var m=/(\d{1,2})[./](\d{1,2})(?:[./](\d{2,4}))?/.exec(line.replace(/\d{1,2}:\d{2}/g," "));
+      if(m){var y=m[3]?(m[3].length===2?2000+ +m[3]:+m[3]):yr;date=y+"-"+String(+m[2]).padStart(2,"0")+"-"+String(+m[1]).padStart(2,"0");}}
+    var t=line.match(/\d{1,2}:\d{2}/g);
+    if(date&&t&&t.length>=2){var a=normTime(t[0]),b=normTime(t[1]);if(a&&b&&a!==b)out.push({date:date,start:a,end:b,hol:/bayram/i.test(line)});}
+  });
+  return out;
+}
+$("txtBtn").addEventListener("click",function(){
+  pending=parseText($("txt").value);showFound();
+  $("photoStat").textContent=pending.length?pending.length+" ta smena topildi. Tekshirib, qo'shing:":"Smena topilmadi. Har qatorda sana va ikkita vaqt bo'lsin, masalan: 03.09 06:00-15:00 (bayram bo'lsa oxiriga \u00abbayram\u00bb deb yozing)";
+});
+$("cancelFound").addEventListener("click",function(){pending=[];showFound();$("photoStat").textContent="";});
+$("addFound").addEventListener("click",function(){
+  if(!pending.length)return;
+  var last=pending[0].date;
+  var add=pending.map(function(x,i){if(x.date>last)last=x.date;return{id:Date.now()+""+i+Math.floor(Math.random()*1000),date:x.date,start:rd(x.date,x.start),end:rd(x.date,x.end),hol:!!x.hol};});S.shifts=S.shifts.concat(add);
+  save();$("month").value=last.slice(0,7);pending=[];showFound();$("photoStat").textContent="Qo'shildi.";$("txt").value="";render();
+});
+})();
+</script>
+</html>
