@@ -252,7 +252,7 @@ $("photo").addEventListener("change",async function(){
   try{
     var b64=await toB64(f);
     var prompt="Bu rasm ish smenalari yozilgan jadval yoki grafik. Rasmda ko'ringan har bir ish smenasini toping. Har smena uchun: date (YYYY-MM-DD; yil ko'rinmasa "+new Date().getFullYear()+" ni oling; sana umuman yo'q bo'lsa null), start (HH:MM, 24 soatlik), end (HH:MM, 24 soatlik). Faqat aniq ko'ringan qiymatlarni yozing, taxmin qilmang. Faqat JSON massiv qaytaring: [{\"date\":\"2026-09-03\",\"start\":\"06:00\",\"end\":\"15:00\"}]. Topilmasa: [].";
-    var resp=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent",{
+    var resp=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",{
       method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":S.gkey},
       body:JSON.stringify({contents:[{parts:[{text:prompt},{inline_data:{mime_type:f.type||"image/jpeg",data:b64}}]}],generationConfig:{responseMimeType:"application/json"}})
     });
